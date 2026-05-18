@@ -139,49 +139,54 @@ int inventory(char *chese_name) {
 
 
 int main() {
-    printf("=== メニュー ===\n"); //メインメニュー
-    printf("1: 商品の選択へ\n");
-    printf("2: 金額の投入へ\n");
-    printf("9: キャンセル\n");
-    printf("================\n");
-    int x; //ユーザーの入力を受け取る変数
-    scanf("%d", &x);
-    printf("%d\n", x);
-
-    cash();
-
-    char chese_name[10];
-    printf("購入する商品名を入力してください: ");
-    scanf("%s", chese_name);
-    inventory(chese_name);
-
-    //テスト用
-    int inserted_money = 1010;
-    int total_price = 210;
-    printf("Inserted: %d JPY\n", inserted_money); //投入金額
-    printf("Price: %d JPY\n", total_price); //商品金額
-    printf("-------------------\n");
-    calculate_change(inserted_money, total_price); 
-
-    FILE * fp;
-    //商品の入れ替え記録
-    fp = fopen("商品情報.csv", "a");
-    if (fp != NULL) {
-        printf("商品情報読込成功\n");
+    
+    while (1)
+    {
+        printf("=== メニュー ===\n"); //メインメニュー
+        printf("1: 商品の選択へ\n");
+        printf("2: 金額の投入へ\n");
+        printf("9: キャンセル\n");
+        printf("================\n");
+        int x; //ユーザーの入力を受け取る変数
+        scanf("%d", &x);
+        printf("%d\n", x);
+        
+        cash();
+        
+        char chese_name[10];
+        printf("購入する商品名を入力してください: ");
+        scanf("%s", chese_name);
+        inventory(chese_name);
+        
+        //テスト用
+        int inserted_money = 1010;
+        int total_price = 210;
+        printf("Inserted: %d JPY\n", inserted_money); //投入金額
+        printf("Price: %d JPY\n", total_price); //商品金額
+        printf("-------------------\n");
+        calculate_change(inserted_money, total_price); 
+        
+        FILE * fp;
+        //商品の入れ替え記録
+        fp = fopen("商品情報.csv", "a");
+        if (fp != NULL) {
+            printf("商品情報読込成功\n");
+        }
+        //商品入れ替え
+        printf("=====商品入れ替え完了=====\n");
+        fclose(fp);
+        //商品の購入履歴
+        FILE * fp_buy;
+        fp_buy = fopen("商品情報.csv", "r");
+        if (fp_buy != NULL) {
+            printf("購入履歴読込成功\n");
+        }
+        char buf[1024];
+        char* k;
+        k = fgets(buf, 1024, fp_buy);
+        printf("%s\n",k);
+        fclose(fp_buy);
     }
-    //商品入れ替え
-    printf("=====商品入れ替え完了=====\n");
-    fclose(fp);
-    //商品の購入履歴
-    FILE * fp_buy;
-    fp_buy = fopen("商品情報.csv", "r");
-    if (fp_buy != NULL) {
-        printf("購入履歴読込成功\n");
-    }
-    char buf[1024];
-    char* k;
-    k = fgets(buf, 1024, fp_buy);
-    printf("%s\n",k);
-    fclose(fp_buy);
+
     return 0;
 }
