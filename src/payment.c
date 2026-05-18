@@ -2,6 +2,7 @@
 
 void calculate_change(int inserted, int price);
 
+/*
 int main(void) {
     //テスト用
     int inserted_money = 1010;
@@ -15,6 +16,7 @@ int main(void) {
 
     return 0;
 }
+*/
 
 /**
  * お釣り枚数の計算
