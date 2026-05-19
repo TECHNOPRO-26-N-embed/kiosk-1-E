@@ -15,6 +15,13 @@ int main(void){
     }
 =======
 #include <string.h>
+
+typedef struct {
+    int id;
+    char name[50];
+    int price;
+} Drink;
+
 /**
  * お釣り枚数の計算
  */
@@ -106,10 +113,10 @@ typedef struct InventoryData
 
 
 int inventory(char *chese_name) {
-    
+
     // 在庫ファイルを読み込む処理
     // FILE *fp;
-    
+
     // if ((fp = fopen("inventory.txt", "r")) != NULL) {
     //     // ファイルが存在する場合は在庫データを読み込む
     //     Inventory *data = fp;
@@ -119,7 +126,7 @@ int inventory(char *chese_name) {
     // else{
     //     // ファイルが存在しない場合はエラーメッセージを表示する
     //     printf("在庫ファイルが見つかりませんでした。\n");
-        
+
     //     return 1;   // エラーコードを返す
     // }
 
@@ -148,13 +155,13 @@ int inventory(char *chese_name) {
                 printf("%sは在庫切れです。\n", inventoryName[i]);
                 return 1;   // 在庫切れ
             }
-        }   
+        }
     }
 }
 
 
 int main() {
-    
+
     while (1)
     {
         printf("=== メニュー ===\n"); //メインメニュー
@@ -165,22 +172,54 @@ int main() {
         int x; //ユーザーの入力を受け取る変数
         scanf("%d", &x);
         printf("%d\n", x);
-        
+
         cash();
-        
+
+        Drink menu[] ={
+        {1, "コーラ",120},
+        {2, "お茶",130},
+        {3, "水",110},
+        };
+
+        int menu_size = sizeof(menu)/sizeof(menu[0]);
+        int choice;
+        int money = 0;
+
+        // お金の投入
+        /*printf("お金を入れてください(円):");*/
+        //if (scanf("%d", &money) != 1 || money <= 0) {
+            //printf("無効な金額です。終了します。\n");
+            // return 1;
+        //}
+
+        printf("\n商品メニュー:\n");
+        for (int i = 0; i < menu_size; i++) {
+            printf("%d. %s - %d円\n", menu[i].id, menu[i].name, menu[i].price);
+            if (money >= menu[i].price) {
+                printf("  [購入可能]\n");
+            }else{
+                printf("  [残金不足]\n");
+            }
+        }
+
+        // 商品の選択
+        printf("\n商品を選んでください (1~%d):", menu_size);
+        if (scanf("%d", &choice) ) {
+        }
+
         char chese_name[10];
         printf("購入する商品名を入力してください: ");
         scanf("%s", chese_name);
         inventory(chese_name);
-        
+
         //テスト用
         int inserted_money = 1010;
         int total_price = 210;
         printf("Inserted: %d JPY\n", inserted_money); //投入金額
         printf("Price: %d JPY\n", total_price); //商品金額
         printf("-------------------\n");
-        calculate_change(inserted_money, total_price); 
-        
+        calculate_change(inserted_money, total_price);
+
         FILE * fp;
         //商品の入れ替え記録
         fp = fopen("商品情報.csv", "a");
