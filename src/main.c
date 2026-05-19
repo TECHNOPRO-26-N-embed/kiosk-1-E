@@ -165,7 +165,7 @@ int main() {
         {2, "お茶",130},
         {3, "水",110},
         };
-
+        
         int menu_size = sizeof(menu)/sizeof(menu[0]);
         int choice;
         int money = 0;
