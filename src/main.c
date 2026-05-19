@@ -26,24 +26,24 @@ int inventory(char *chese_name);
 void calculate_change(int inserted, int price) {
     int change = inserted - price;
     if (change < 0) {
-        printf("error: insufficient\n"); // 投入金額が足りません
+        printf("エラー: 投入金額が足りません\n");
         return;
     }
-    printf("Change: %d 円\n\n", change); // お釣り総額
+    printf("お釣り総額: %d円\n\n", change);
     if (change == 0) {
-        printf("No change.\n");
+        printf("お釣りはありません。\n");
         return;
     }
     int coins[] = {500, 100, 50, 10};
     int coin_count = sizeof(coins) / sizeof(coins[0]);
-    printf("Coins dispensed:\n"); // お釣りの内訳
+    printf("お釣りの内訳:\n");
     for (int i = 0; i < coin_count; i++) {
         int coin_value = coins[i];
         int count = change / coin_value;
         change = change % coin_value;
 
         if (count > 0) {
-            printf("%3d coin: %d\n", coin_value, count);
+            printf("%3d円玉: %d枚\n", coin_value, count);
         }
     }
 }
