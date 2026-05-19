@@ -1,19 +1,4 @@
 #include <stdio.h>
-<<<<<<< HEAD
-int main(void){
-    int choice;
-
-    while(1){
-        printf("\n====================\n");
-        printf(" 自動販売機 メニュー \n");
-        printf("\n====================\n");
-        printf(" 1: 商品選択\n");
-        printf(" 2: 金額投入\n");
-        printf(" 3: 終了\n");
-        printf("----------------------\n");
-        break;
-    }
-=======
 #include <string.h>
 
 typedef struct {
@@ -242,6 +227,5 @@ int main() {
         fclose(fp_buy);
     }
 
->>>>>>> e65dcb0acf74622f1083e7bcbbc02e550c01e567
     return 0;
 }
