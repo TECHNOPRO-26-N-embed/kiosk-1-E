@@ -285,9 +285,46 @@ int admin_menu(void) {
 				}
 			} while (1);
 
+			printf("入れ替えたい商品のIDを入力してください: ");
+			scanf("%d", &product.product_id);
+
 			if (replace_products(product) == 0) {
-				printf("商品情報を更新しました。\n");
-				show_inventory();
+				// 追加するIDが既存と重複していないかチェック
+				int duplicate = 0;
+				for (int i = 0; i < inventory_count; i++) {
+					if (inventory[i].product_id == product.product_id) {
+						duplicate = 1;
+						break;
+					}
+				}
+				if (duplicate) {
+					printf("同じIDの商品が既に存在します。別のIDを指定してください。\n");
+				} else {
+					// 商品情報をCSVに書き戻す
+					FILE *csv = fopen("p_information.csv", "w");
+					if (csv) {
+						for (int i = 0; i < inventory_count; i++) {
+							fprintf(csv, "%d,%s,%d,%d,%s\n",
+								inventory[i].product_id,
+								inventory[i].name,
+								inventory[i].price,
+								inventory[i].stock,
+								inventory[i].type == 1 ? "温" : "冷");
+						}
+						// 新商品を追加
+						fprintf(csv, "%d,%s,%d,%d,%s\n",
+							product.product_id,
+							product.name,
+							product.price,
+							product.stock,
+							product.type == 1 ? "温" : "冷");
+						fclose(csv);
+						printf("商品情報を追加し、CSVに保存しました。\n");
+						show_inventory();
+					} else {
+						printf("CSVファイルの書き込みに失敗しました。\n");
+					}
+				}
 			} else {
 				printf("商品情報の更新に失敗しました。\n");
 			}
