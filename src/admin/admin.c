@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define ADMIN_INVENTORY_SIZE ADMIN_MAX_PRODUCTS
 
@@ -295,7 +296,7 @@ int admin_menu(void) {
 					printf("CSVファイルのオープンに失敗しました。\n");
 					if (src) fclose(src);
 					if (dst) fclose(dst);
-					return;
+					return 0;
 				}
 				char buf_a[1024];
 				int found = 0;
