@@ -140,3 +140,113 @@
 > 設計中に気になった点や、明日の実装に向けた注意点があれば記録してください.
 
 AIに通知を提案されたが本当に実装できそうかは不安。
+
+## 6. 関数シグネチャー案（基本設計書準拠）
+
+```c
+// --- データ構造体定義例 ---
+// 商品情報をまとめる構造体
+typedef struct {
+    int product_id;      // 商品ID
+    char name[64];      // 商品名
+    unsigned int price; // 単価
+    int stock;          // 在庫数
+    char type[8];       // 温冷区分（"冷"や"温"など）
+} ProductInfo;
+
+// 売上データをまとめる構造体
+typedef struct {
+    int product_id;         // 商品ID
+    int quantity;           // 購入数量
+    int member_id;          // 会員ID
+    unsigned int use_point; // 利用ポイント
+    unsigned int change;    // お釣り
+} SalesData;
+
+// 購入処理に必要な情報をまとめる構造体
+typedef struct {
+    int product_id;         // 商品ID
+    int quantity;           // 購入数量
+    unsigned int money;     // 投入金額
+    int member_id;          // 会員ID
+    unsigned int use_point; // 利用ポイント
+} PurchaseInfo;
+
+// --- 関数シグネチャー案（構造体利用） ---
+
+// システムの初期化（データ読込・初期設定）
+// 戻り値: 0=成功, 1=データ読込失敗, 2=初期設定エラー
+int init_system(void);
+
+// アイドリング画面の表示
+void show_idle_screen(void);
+
+// 商品一覧画面の表示
+void show_product_page(void);
+
+// 商品選択処理（商品ID入力・選択）
+// 戻り値: 選択された商品ID（-1: キャンセル, -2: 入力エラー）
+int select_product(void);
+
+// 商品選択内容の確認画面表示
+// 引数: product_id - 商品ID, quantity - 購入数量
+// 戻り値: 0=確認OK, 1=数量エラー, 2=キャンセル
+int confirm_selection(int product_id, int quantity);
+
+// 金額投入処理（投入金額の受付・表示）
+// 戻り値: 投入された金額（0: キャンセル, -1: 入力エラー）
+int input_money(void);
+
+// 購入確定処理（合計金額計算・在庫確認）
+// 引数: 購入情報構造体（商品ID、数量、投入金額、会員ID、利用ポイント）
+// 戻り値: 0=成功, 1=在庫不足, 2=金額不足, 3=その他エラー
+int confirm_purchase(PurchaseInfo purchase);
+
+// お釣りの計算・排出処理
+// 引数: money - 投入金額, total_price - 合計金額
+// 戻り値: お釣り金額
+unsigned int calculate_change(unsigned int money, unsigned int total_price);
+
+// キャンセル時の返金処理
+// 引数: money - 投入金額
+// 戻り値: 0=返金成功, 1=返金失敗
+int cancel_purchase(unsigned int money);
+
+// 在庫数の更新処理
+// 引数: product_id - 商品ID, quantity - 増減数（マイナスで減少）
+// 戻り値: 0=成功, 1=在庫不足, 2=更新失敗
+int update_inventory(int product_id, int quantity);
+
+// 売上データのCSV保存処理（3回まで自動再試行）
+// 引数: 売上データ構造体
+// 戻り値: 0=成功, 1=保存失敗
+int save_sales_data(SalesData sales);
+
+// 操作ログのCSV保存処理（3回まで自動再試行）
+// 引数: operation - 操作内容, detail - 詳細, error - エラー内容
+// 戻り値: 0=成功, 1=保存失敗
+int save_log(const char* operation, const char* detail, const char* error);
+
+// 会員認証・ポイント管理処理
+// 引数: member_id - 入力された会員ID
+// 戻り値: 0=認証成功, 1=認証失敗
+int member_login(int member_id);
+
+// ポイント付与・利用処理
+// 引数: member_id - 会員ID, add_point - 付与ポイント, use_point - 利用ポイント
+// 戻り値: 0=成功, 1=残高不足, 2=更新失敗
+int update_points(int member_id, int add_point, int use_point);
+
+// 商品入れ替え処理（管理者用）
+// 引数: 商品情報構造体
+// 戻り値: 0=成功, 1=入力エラー, 2=更新失敗
+int replace_products(ProductInfo product);
+
+// 故障・異常検知処理
+// 戻り値: 0=異常なし, 1=異常検知
+int detect_fault(void);
+
+// 管理者用メニュー表示・操作
+// 戻り値: 0=正常終了, 1=認証失敗, 2=操作エラー
+int admin_menu(void);
+```
