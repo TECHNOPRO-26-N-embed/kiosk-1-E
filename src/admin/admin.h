@@ -9,6 +9,7 @@
 // 商品数・在庫数の最大値（要件より）
 #define ADMIN_MAX_PRODUCTS 50
 #define ADMIN_MAX_STOCK 50
+#define ADMIN_MAX_PRICE 9000
 
 /* 管理機能で扱う商品情報。 */
 typedef struct {

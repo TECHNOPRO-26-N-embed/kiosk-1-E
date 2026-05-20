@@ -26,7 +26,7 @@ static int find_product_index(int product_id) {
 static int validate_product(ProductInfo product) {
 	if (product.product_id <= 0) return 0;
 	if (product.name[0] == '\0') return 0;
-	if (product.price == 0) return 0;
+	if (product.price == 0 || product.price > ADMIN_MAX_PRICE) return 0;
 	if (product.stock < 0 || product.stock > ADMIN_MAX_STOCK) return 0;
 	if (!(product.type == 1 || product.type == 2)) return 0; // 1=温, 2=冷
 	return 1;
@@ -259,8 +259,8 @@ int admin_menu(void) {
 
 			// 価格 入力
 			do {
-				if (!read_uint("価格: ", &product.price) || product.price == 0) {
-					printf("価格の入力が不正です。0より大きい金額を入力してください。\n");
+				if (!read_uint("価格: ", &product.price) || product.price == 0 || product.price > ADMIN_MAX_PRICE) {
+					printf("価格の入力が不正です。1～%dの範囲で入力してください。\n", ADMIN_MAX_PRICE);
 				} else {
 					break;
 				}
