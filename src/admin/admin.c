@@ -285,8 +285,6 @@ int admin_menu(void) {
 				}
 			} while (1);
 
-			printf("入れ替えたい商品のIDを入力してください: ");
-			scanf("%d", &product.product_id);
 
 			if (replace_products(product) == 0) {
 				// 追加するIDが既存と重複していないかチェック
