@@ -1,15 +1,12 @@
 
 #include "sales.h"
-#include "test_log.h"
+#include "log\log.h"
+#include "product.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 // --- 暫定: 在庫更新関数 ---
-int update_inventory(int product_id, int quantity) {
-    (void)product_id;
-    (void)quantity;
-    return 0;
-}
+int update_inventory(int product_id, int quantity);
 
 // 売上データを保存する関数
 int save_sales_data(SalesData sales) {

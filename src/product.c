@@ -5,7 +5,7 @@
 #include <string.h>
 
 // 商品データはこのモジュール内で静的に保持する
-static ProductInfo g_products[MAX_PRODUCTS]; // 商品情報配列
+static Product g_products[MAX_PRODUCTS]; // 商品情報配列
 static int g_product_count = 0;              // 商品数
 
 // scanf失敗時に入力バッファの残りを読み捨てる関数
@@ -167,7 +167,7 @@ int select_product(void) {
 
 // 商品IDと数量の妥当性を確認する
 // 戻り値: 0=OK, 1=エラー（在庫不足や不正な数量）
-int confirm_selection(int product_id, int quantity) {
+int confirm_selection(int product_id) {
     int index;
 
     initialize_default_products();
@@ -177,15 +177,15 @@ int confirm_selection(int product_id, int quantity) {
         return 1; // 商品ID不正
     }
 
-    if (quantity <= 0 || quantity > g_products[index].stock) {
-        return 1; // 数量不正または在庫不足
-    }
+    //if (quantity <= 0 || quantity > g_products[index].stock) {
+    //    return 1; // 数量不正または在庫不足
+    //}
 
-    printf("選択内容: ID:%d 名前:%s 数量:%d 合計:%u円\n",
+    printf("選択内容: ID:%d\t名前:%s\t合計:%u円\n",
            g_products[index].product_id,
            g_products[index].name,
-           quantity,
-           g_products[index].price * (unsigned int)quantity);
+    
+           g_products[index].price);
 
     return 0;
 }
@@ -215,33 +215,33 @@ int update_inventory(int product_id, int quantity) {
 
 // 商品情報の更新または新規追加
 // 戻り値: 0=成功, 1=入力エラー, 2=商品数上限
-int replace_products(ProductInfo product) {
-    int index;
+// int replace_products(Product product) {
+//     int index;
 
-    initialize_default_products();
+//     initialize_default_products();
 
-    // 入力値チェック
-    if (product.product_id <= 0 || product.price == 0 || product.stock < 0) {
-        return 1;
-    }
-    if (product.name[0] == '\0' || product.type[0] == '\0') {
-        return 1;
-    }
+//     // 入力値チェック
+//     if (product.product_id <= 0 || product.price == 0 || product.stock < 0) {
+//         return 1;
+//     }
+//     if (product.name[0] == '\0' || product.type[0] == '\0') {
+//         return 1;
+//     }
 
-    index = find_product_index_by_id(product.product_id);
+//     index = find_product_index_by_id(product.product_id);
 
-    if (index >= 0) {
-        // 既存商品を上書き
-        g_products[index] = product;
-        return 0;
-    }
+//     if (index >= 0) {
+//         // 既存商品を上書き
+//         g_products[index] = product;
+//         return 0;
+//     }
 
-    if (g_product_count >= MAX_PRODUCTS) {
-        return 2; // 商品数上限
-    }
+//     if (g_product_count >= MAX_PRODUCTS) {
+//         return 2; // 商品数上限
+//     }
 
-    // 新規商品を追加
-    g_products[g_product_count] = product;
-    g_product_count++;
-    return 0;
-}
+//     // 新規商品を追加
+//     g_products[g_product_count] = product;
+//     g_product_count++;
+//     return 0;
+// }

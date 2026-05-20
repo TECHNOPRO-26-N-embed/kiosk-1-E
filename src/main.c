@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include "admin\admin.h"  // 管理者メニューのヘッダーファイル
 #include "member_login\member.h" // 会員認証・ポイント管理のヘッダーファイル
+#include "product.h" // 商品選択・確認のヘッダーファイル
+#include "sales.h" // 金額投入・購入確定・キャンセルの
+#include "fault\fault.h" // 故障検知・通知のヘッダーファイル
 
 // --- main.cで実装する関数 ---
 int init_system(void) {
@@ -31,9 +34,9 @@ void show_product_page(void) {
 
 // これらは product.c, sales.c, log.c, member.c, admin.c, fault.c などで実装
 int select_product(void);        // 商品選択（product.c）
-int confirm_selection(int, int); // 商品選択内容確認（product.c）
+int confirm_selection(int); // 商品選択内容確認（product.c）
 int input_money(void);           // 金額投入（sales.c）
-int confirm_purchase(/*PurchaseInfo*/ void*); // 購入確定（sales.c）
+//int confirm_purchase(/*PurchaseInfo*/ void*); // 購入確定（sales.c）
 int cancel_purchase(unsigned int); // キャンセル返金（sales.c）
 int admin_menu(void);            // 管理者メニュー（admin.c）
 // --- 会員認証・ポイント管理（member.c）---
@@ -64,13 +67,13 @@ int main(void) {
 			// --- 商品購入フロー ---
 			show_product_page();
 			// ↓以下は外部実装（product.c, sales.c, member.c等）
-			// int product_id = select_product();
-			// if (product_id < 0) { ... キャンセル・エラー処理 ... }
-			// int quantity = ...; // 数量入力（外部実装）
-			// int confirm = confirm_selection(product_id, quantity);
-			// if (confirm != 0) { ... キャンセル・エラー処理 ... }
+			int product_id = select_product();
+			//if (product_id < 0) { ... キャンセル・エラー処理 ... }
+			//int quantity// 数量入力（外部実装）
+			int confirm = confirm_selection(product_id);
+			//if (confirm != 0) { ... キャンセル・エラー処理 ... }
 			int money = input_money();
-			// if (money <= 0) { cancel_purchase(money); continue; }
+			 if (money <= 0) { cancel_purchase(money); continue; }
 
 			// --- 会員認証・ポイント利用 ---
 			// 例1: 個別呼び出し
