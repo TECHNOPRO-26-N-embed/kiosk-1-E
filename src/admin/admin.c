@@ -288,40 +288,43 @@ int admin_menu(void) {
 
 			if (replace_products(product) == 0) {
 				// 追加するIDが既存と重複していないかチェック
-				int duplicate = 0;
-				for (int i = 0; i < inventory_count; i++) {
-					if (inventory[i].product_id == product.product_id) {
-						duplicate = 1;
-						break;
-					}
+				// p_information.csvを一時ファイルとして全行読み込み、id_y==product.product_idならその行を書き換え、そうでなければそのまま書き出す
+				FILE *src = fopen("p_information.csv", "r");
+				FILE *dst = fopen("p_information_tmp.csv", "w");
+				if (!src || !dst) {
+					printf("CSVファイルのオープンに失敗しました。\n");
+					if (src) fclose(src);
+					if (dst) fclose(dst);
+					return;
 				}
-				if (duplicate) {
-					printf("同じIDの商品が既に存在します。別のIDを指定してください。\n");
-				} else {
-					// 商品情報をCSVに書き戻す
-					FILE *csv = fopen("p_information.csv", "w");
-					if (csv) {
-						for (int i = 0; i < inventory_count; i++) {
-							fprintf(csv, "%d,%s,%d,%d,%s\n",
-								inventory[i].product_id,
-								inventory[i].name,
-								inventory[i].price,
-								inventory[i].stock,
-								inventory[i].type == 1 ? "温" : "冷");
-						}
-						// 新商品を追加
-						fprintf(csv, "%d,%s,%d,%d,%s\n",
+				char buf_a[1024];
+				int found = 0;
+				while (fgets(buf_a, sizeof(buf_a), src) != NULL) {
+					char tmp[1024];
+					strcpy(tmp, buf_a);
+					char *id_x = strtok(tmp, ",");
+					int id_y = atoi(id_x);
+					if (id_y == product.product_id) {
+						fprintf(dst, "%d,%s,%d,%d,%s\n",
 							product.product_id,
 							product.name,
 							product.price,
 							product.stock,
 							product.type == 1 ? "温" : "冷");
-						fclose(csv);
-						printf("商品情報を追加し、CSVに保存しました。\n");
-						show_inventory();
+						found = 1;
 					} else {
-						printf("CSVファイルの書き込みに失敗しました。\n");
+						fputs(buf_a, dst);
 					}
+				}
+				fclose(src);
+				fclose(dst);
+				if (found) {
+					remove("p_information.csv");
+					rename("p_information_tmp.csv", "p_information.csv");
+					printf("商品ID %d の情報を更新しました。\n", product.product_id);
+				} else {
+					remove("p_information_tmp.csv");
+					printf("指定したIDの商品は存在しません。\n");
 				}
 			} else {
 				printf("商品情報の更新に失敗しました。\n");
